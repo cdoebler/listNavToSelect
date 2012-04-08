@@ -39,7 +39,7 @@
 							var option = $(document.createElement("option"));
 							
 							// store list element
-							methods.setData(option, "li", liObj);
+							methods.setData(option, "a", anchorObj);
 							
 							// store target if it is set to _blank
 							if (target == "_blank") {
@@ -60,25 +60,27 @@
 								select.val(href);
 								option.attr("selected", "selected");
 								methods.setData(select, "href", href);
-								methods.setData(select, "active_li", liObj);
 							}
+							
+							// get label
+							var depth = liObj.parents("li").length;
+							var label = methods.getLabelPrefix(depth) + anchorObj.html();
 							
 							option
 								.appendTo(select)
 								.val(href)
-								.html(anchorObj.html());
+								.html(label);
 								
 							// add update of select when clicking link
 							anchorObj.click(function() {
 								if (target != "_blank") {
-									var previousActiveLi = methods.getData(select, "active_li");
-									previousActiveLi.removeClass(settings.class_list_active);
-
-									// update select field
-									methods.selectOption(href, select);
+									listObj.find("li").removeClass(settings.class_list_active);
 
 									// update class of li
 									liObj.addClass(settings.class_list_active);
+
+									// update select field
+									methods.selectOption(href, select);
 
 									// update select field
 									methods.updateSelect(select);
@@ -110,10 +112,10 @@
 		},
 		
 		updateSelect : function(select) {
-			var optionSelected = select.find(":selected");
+			var option = select.find(":selected");
 
-			var target = methods.getData(optionSelected, "target");
-			var href = optionSelected.val();
+			var target = methods.getData(option, "target");
+			var href = option.val();
 
 			if (target == "_blank") {
 				window.open(href);
@@ -125,23 +127,27 @@
 			} else {
 				window.location.href = href;
 				methods.setData(select, "href", href);	
-				methods.updateLi(select, optionSelected);
+				methods.updateList(select, option);
 			}			
 		},
 		
-		updateLi : function(select, option) {
+		updateList : function(select, option) {
+			var settings = methods.settings;
+			
 			if (option === undefined) {
 				option = select.find(":selected");
 			}
 			
-			var settings = methods.settings;
-			var liObjPrev = methods.getData(select, "active_li");
-			var liObj = methods.getData(option, "li");
+			var list = methods.getData(select, "list");
+			var anchorObj = methods.getData(option, "a");
+			var liObj = anchorObj.parents("li:first");
 			
-			liObjPrev.removeClass(settings.class_list_active);
+			list.find("li").removeClass(settings.class_list_active);
 			liObj.addClass(settings.class_list_active);
 			
-			methods.setData(select, "active_li", liObj);
+			liObj.parents("li").each(function() {
+				$(this).addClass(settings.class_list_active);
+			});
 		},
 		
 		selectOption : function(href, select) {
@@ -174,6 +180,16 @@
 		
 		getData : function(obj, key) {
 			return obj.data(methods.datarefix + key);
+		},
+		
+		getLabelPrefix : function(length) {
+			var prefix = "";
+			
+			for(var i = 0; i < length; i++){
+				prefix += methods.settings.sub_options_indent;
+			}
+			
+			return prefix;
 		}
 	}
 	
@@ -194,6 +210,7 @@
 			"anchor_selector": "li a",
 			"class_target_blank": false,
 			"class_list_active": "active",
+			"sub_options_indent": "&nbsp;&nbsp;",
 			"hide_list": true
 		}, options);
 

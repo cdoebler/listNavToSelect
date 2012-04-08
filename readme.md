@@ -38,6 +38,10 @@ class_target_blank      css class for options which should open a new window
 class_list_active       css class of active li element
 						default: "active"
 
+sub_options_indent      string to use per depth level when creation sub options which
+                        were generated because of nested lists
+                        default: "&nbsp;&nbsp;"
+
 hide_list               flag to trigger visibility of source list
                         default: true
 </pre>

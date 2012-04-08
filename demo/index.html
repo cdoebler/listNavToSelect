@@ -6,12 +6,12 @@
 			text-decoration: none;
 		}
 		
-		.active {
+		.active > a {
 			text-decoration: underline;
 		}
 	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script src="../js/listnavtoselect-0.1.min.js"></script>
+	<script src="../js/listnavtoselect-0.1.js"></script>
 	<script>
 		jQuery(document).ready(function($) {
 			$(".navigation").listNavToSelect({
@@ -22,7 +22,13 @@
 </head>
 <body>
 <ul class="navigation">
-	<li class="active"><a href="#local1">local 1</a></li>
+	<li class="active">
+		<a href="#local1">local 1</a>
+		<ul class="subnavigation">
+			<li class="active"><a href="#sublocal1">sublocal 1</a></li>
+			<li><a href="#sublocal2">sublocal 2</a></li>
+		</ul>
+	</li>
 	<li><a href="https://github.com/" target="_blank">github.com</a></li>
 	<li><a href="#local2">local 2</a></li>
 </ul>
