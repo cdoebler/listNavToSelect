@@ -16,10 +16,17 @@ Convert list into select field using default values:
 $(".navigation").listNavToSelect();
 </pre>
 
-Convert list into select field and store it in element with class "container"
+Convert list into select field and store it in element with class "container":
 <pre>
 $(".navigation").listNavToSelect({
 	container_selector: ".container"
+});
+</pre>
+
+Convert only first level of list into select field:
+<pre>
+$(".navigation").listNavToSelect({
+	anchor_selector: "> li > a"
 });
 </pre>
 
