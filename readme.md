@@ -5,6 +5,9 @@ listNavToSelect
 
 2012 by [Christian Doebler](http://www.christian-doebler.net/)
 
+This plugin automates the process of creating navigations in
+projects with responsive design
+
 
 #### Examples
 
@@ -31,6 +34,9 @@ anchor_selector         jQuery selector for anchor elements in source list
 
 class_target_blank      css class for options which should open a new window
                         default: false
+
+class_list_active       css class of active li element
+						default: "active"
 
 hide_list               flag to trigger visibility of source list
                         default: true

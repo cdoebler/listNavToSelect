@@ -13,30 +13,37 @@
 (function($){
 	var methods = {
 		dataPrefix : "listNavToSelect.",
+		settings : false,
 		select : false,
 		
 		init : function($this, settings) {
+			methods.settings = settings;
+
 			$($this)
-				.each(function(){
-					var keyTarget = methods.dataPrefix + "target";
-					var keyHref = methods.dataPrefix + "href";
-					
+				.each(function(){					
 					var currentHref = methods.getHref();
 					
 					var listObj = $(this);
 					var select = $(document.createElement("select"));
 					
+					// store list object for further manipulation
+					methods.setData(select, "list", listObj);
+					
 					// create select field
 					$(settings.anchor_selector, this)
 						.each(function() {
 							var anchorObj = $(this);
+							var liObj = anchorObj.parents("li:first");
 							var target = $(this).attr("target");
 							var href = this.href;
 							var option = $(document.createElement("option"));
 							
+							// store list element
+							methods.setData(option, "li", liObj);
+							
 							// store target if it is set to _blank
 							if (target == "_blank") {
-								option.data(keyTarget, target);
+								methods.setData(option, "target", target);
 								
 								if (
 									settings.class_target_blank !== false &&
@@ -47,42 +54,47 @@
 							}
 							
 							// set selected option
-							if (href == currentHref) {
+							var active = liObj
+											.hasClass(settings.class_list_active);
+							if (active) {
 								select.val(href);
 								option.attr("selected", "selected");
-								select.data(keyHref, href);
+								methods.setData(select, "href", href);
+								methods.setData(select, "active_li", liObj);
 							}
 							
 							option
 								.appendTo(select)
 								.val(href)
 								.html(anchorObj.html());
+								
+							// add update of select when clicking link
+							anchorObj.click(function() {
+								if (target != "_blank") {
+									var previousActiveLi = methods.getData(select, "active_li");
+									previousActiveLi.removeClass(settings.class_list_active);
+
+									// update select field
+									methods.selectOption(href, select);
+
+									// update class of li
+									liObj.addClass(settings.class_list_active);
+
+									// update select field
+									methods.updateSelect(select);
+								}
+							});
 						});
 						
 					// add change event to select field
 					select
 						.change(function() {
-							var liObj = $(this).find(":selected");
-							
-							var target = liObj.data(keyTarget);
-							var href = liObj.val();
-							
-							if (target == "_blank") {
-								window.open(href);
-								
-								// restore previous option since we opened a new window
-								href = select.data(keyHref);
-								methods.selectOption(href);
-								
-							} else {
-								window.location.href = href;
-								select.data(keyHref, href);							
-							}
+							methods.updateSelect($(this));
 						});
 
 					// hide list element
 					if (settings.hide_list) {
-						listObj.hide()
+						listObj.hide();	
 					}
 
 					// insert select field into content
@@ -95,6 +107,41 @@
 					// store select field globally
 					methods.select = select;
 				});
+		},
+		
+		updateSelect : function(select) {
+			var optionSelected = select.find(":selected");
+
+			var target = methods.getData(optionSelected, "target");
+			var href = optionSelected.val();
+
+			if (target == "_blank") {
+				window.open(href);
+
+				// restore previous option since we opened a new window
+				href = methods.getData(select, "href");
+				methods.selectOption(href);
+
+			} else {
+				window.location.href = href;
+				methods.setData(select, "href", href);	
+				methods.updateLi(select, optionSelected);
+			}			
+		},
+		
+		updateLi : function(select, option) {
+			if (option === undefined) {
+				option = select.find(":selected");
+			}
+			
+			var settings = methods.settings;
+			var liObjPrev = methods.getData(select, "active_li");
+			var liObj = methods.getData(option, "li");
+			
+			liObjPrev.removeClass(settings.class_list_active);
+			liObj.addClass(settings.class_list_active);
+			
+			methods.setData(select, "active_li", liObj);
 		},
 		
 		selectOption : function(href, select) {
@@ -119,6 +166,14 @@
 		
 		getHref : function() {
 			return window.location.href;
+		},
+		
+		setData : function(obj, key, value) {
+			return obj.data(methods.datarefix + key, value);
+		},
+		
+		getData : function(obj, key) {
+			return obj.data(methods.datarefix + key);
 		}
 	}
 	
@@ -138,6 +193,7 @@
 			"container_selector": false,
 			"anchor_selector": "li a",
 			"class_target_blank": false,
+			"class_list_active": "active",
 			"hide_list": true
 		}, options);
 
