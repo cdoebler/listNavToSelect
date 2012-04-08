@@ -26,6 +26,22 @@
 					var listObj = $(this);
 					var select = $(document.createElement("select"));
 					
+					// copy classes of list element to select field
+					if (settings.copy_list_classes !== false) {
+						var listClasses = listObj.attr("class");
+						if (listClasses != "") {
+							select.attr("class", listClasses);
+						}
+					}
+					
+					// set class of select field
+					if (settings.select_class !== false) {
+						var selectClass = settings.select_class;
+						if (!select.hasClass(selectClass)) {
+							select.addClass(selectClass);
+						}
+					}
+					
 					// store list object for further manipulation
 					methods.setData(select, "list", listObj);
 					
@@ -211,7 +227,9 @@
 			"class_target_blank": false,
 			"class_list_active": "active",
 			"sub_options_indent": "&nbsp;&nbsp;",
-			"hide_list": true
+			"hide_list": true,
+			"copy_list_classes": false,
+			"select_class": false
 		}, options);
 
 		if (methods[method] !== undefined) {

@@ -44,4 +44,10 @@ sub_options_indent      string to use per depth level when creation sub options 
 
 hide_list               flag to trigger visibility of source list
                         default: true
+
+copy_list_classes       flag to trigger copy of list classes to select field
+                        default: false
+
+select_class            css class to add to select field
+                        default: false
 </pre>
