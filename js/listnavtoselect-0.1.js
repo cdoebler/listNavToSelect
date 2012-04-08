@@ -1,6 +1,14 @@
 /**
  * listNavToSelect - converts a list navigation into a select field
- *          2012 by Christian Doebler <info@christian-doebler.net>
+ * 
+ * 2012 by Christian Doebler <info@christian-doebler.net>
+ * 
+ * Copyright 2012
+ * licensed under the MIT License
+ * Do not remove this copyright notice
+ * 
+ * Thanks,
+ * Christian
  */
 (function($){
 	var methods = {
