@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title>listNavToSelect</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="../js/listnavtoselect-0.1.min.js"></script>
+	<script>
+		jQuery(document).ready(function($) {
+			$(".navigation").listNavToSelect();
+			$(".navigation").bind("change", function() {
+				console.log("change");
+			});
+		});
+	</script>	
+</head>
+<body>
+<ul class="navigation">
+	<li><a href="https://github.com/" target="_blank">github.com</a></li>
+	<li><a href="#local1" class="active">local 1</a></li>
+	<li><a href="#local2">local 2</a></li>
+</ul>
+</body>
+</html>
